@@ -17,27 +17,29 @@ function GameBoard()
         return boardArr
     }
 
-
+    const board = createBoard()
     /**
      * function handle userinput and modify the cell value
      */
-    function dropTokenInCell(row,col)
+    function dropTokenInCell(playerToken, row, col)
     {
-        boardArr.forEach((row) => {
-            // find all cells with value 0
-            console.log(row)
-            
-        })
-
+        let value = 0
+        // loop through the array and find the cellsValue equal to 0
+        // modify the cellvalue from user input
+        if(board[row][col].getToken() === 0)
+        {
+            value = board[row][col].setToken(playerToken)
+        }
+        return {value} 
     }
 
     function printBoard()
     {
-        const board = createBoard()
+
         // print out each cell value in the board
         const printBoardWithCells = board.map((row) => row.map((cell) => cell.getToken()))
         console.table(printBoardWithCells)
-        return printBoardWithCells
+        // return printBoardWithCells
     }
 
     return {dropTokenInCell,printBoard}
@@ -48,7 +50,7 @@ function Token()
     let initToken = 0
     function setToken(token)
     {
-        return token = initToken
+        return initToken = token
     }
 
     function getToken()
@@ -85,17 +87,16 @@ function GameController()
     {
         if(activePlayer === listOfPlayers[0])
         {
-            return activePlayer === listOfPlayers[1]
+            return activePlayer = listOfPlayers[1]
         }
         else
         {
-            return activePlayer === listOfPlayers[0]
+            return activePlayer = listOfPlayers[0]
         }
     }
 
     function getActivePlayer()
     {
-        console.log(activePlayer)
         return activePlayer
     }
 
@@ -105,12 +106,23 @@ function GameController()
         console.log(`New game. It is "${getActivePlayer().name}" turn to start`)
     }
     
-    return {printNewRound,switchPlayerTurns}
+    function playRound(player,row,col)
+    {
+        console.log(`Dropping ${getActivePlayer().name}'s token: "${getActivePlayer().token}" into (row,col): ${row}${col}`)
+        gameBoard.dropTokenInCell(getActivePlayer().token, row, col);
+        switchPlayerTurns()
+        printNewRound()
+    }
+    printNewRound()
+
+    return {playRound,getActivePlayer,switchPlayerTurns}
 
 }
 
 const game = GameController()
-game.printNewRound()
+game.playRound(game.getActivePlayer().name, 0, 0)
+
+
 
 
 
