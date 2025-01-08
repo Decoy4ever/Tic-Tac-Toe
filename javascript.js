@@ -3,30 +3,44 @@ function GameBoard()
     let numberOfRows = 3;
     let numberOfCols = 3;
     let boardArr = [];
-    // let initToken = 0
-    const token = Token()
 
-    function createBoard(row,col)
+    function createBoard()
     {
         for(let rowIndex = 0; rowIndex < numberOfRows; rowIndex++)
         {
             boardArr[rowIndex] = [];
             for(let colIndex = 0; colIndex < numberOfCols; colIndex++)
             {
-                boardArr[rowIndex][colIndex] = token.setToken(token)
+                boardArr[rowIndex][colIndex] = Token()
             }
         }
         return boardArr
     }
 
+
+    /**
+     * function handle userinput and modify the cell value
+     */
+    function dropTokenInCell(row,col)
+    {
+        boardArr.forEach((row) => {
+            // find all cells with value 0
+            console.log(row)
+            
+        })
+
+    }
+
     function printBoard()
     {
         const board = createBoard()
-        console.table(board)
-        return board
+        // print out each cell value in the board
+        const printBoardWithCells = board.map((row) => row.map((cell) => cell.getToken()))
+        console.table(printBoardWithCells)
+        return printBoardWithCells
     }
 
-    return {printBoard}
+    return {dropTokenInCell,printBoard}
 }
 
 function Token()
@@ -47,7 +61,5 @@ function Token()
 
 
 const gameBoard = GameBoard()
+gameBoard.dropTokenInCell()
 gameBoard.printBoard()
-
-
-
