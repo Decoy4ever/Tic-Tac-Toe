@@ -59,7 +59,59 @@ function Token()
     return {setToken, getToken}
 }
 
+function GameController()
+{
 
-const gameBoard = GameBoard()
-gameBoard.dropTokenInCell()
-gameBoard.printBoard()
+    const gameBoard = GameBoard()
+    const playerOne = "Player"
+    const playerTwo = "Comp"
+
+    let listOfPlayers = 
+    [
+        {
+            name: playerOne,
+            token: "X"
+        },
+        {
+            name: playerTwo,
+            token: "O"
+        }
+    ]
+
+    // init let active player be the first element in the listOfPlayers arr
+    let activePlayer = listOfPlayers[0]
+
+    function switchPlayerTurns()
+    {
+        if(activePlayer === listOfPlayers[0])
+        {
+            return activePlayer === listOfPlayers[1]
+        }
+        else
+        {
+            return activePlayer === listOfPlayers[0]
+        }
+    }
+
+    function getActivePlayer()
+    {
+        console.log(activePlayer)
+        return activePlayer
+    }
+
+    function printNewRound()
+    {
+        gameBoard.printBoard()
+        console.log(`New game. It is "${getActivePlayer().name}" turn to start`)
+    }
+    
+    return {printNewRound,switchPlayerTurns}
+
+}
+
+const game = GameController()
+game.printNewRound()
+
+
+
+
