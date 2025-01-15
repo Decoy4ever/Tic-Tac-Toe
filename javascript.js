@@ -29,17 +29,24 @@ function GameBoard()
         if(board[row][col].getToken() === 0)
         {
             value = board[row][col].setToken(playerToken)
+            return value
         }
-        return {value} 
+        else if(board[row][col].getToken() !== 0)
+        {
+            console.log(`Unavaliable choose a different cell from ${row}${col}`)
+            return
+        }
     }
 
+    /**
+     * Print the Current Board with cell values
+     */
     function printBoard()
     {
-
         // print out each cell value in the board
         const printBoardWithCells = board.map((row) => row.map((cell) => cell.getToken()))
         console.table(printBoardWithCells)
-        // return printBoardWithCells
+        return printBoardWithCells
     }
 
     return {dropTokenInCell,printBoard}
@@ -102,25 +109,78 @@ function GameController()
 
     function printNewRound()
     {
-        gameBoard.printBoard()
+        const currentBoard = gameBoard.printBoard()
         console.log(`New game. It is "${getActivePlayer().name}" turn to start`)
+        return currentBoard
+    }
+
+
+    /**
+     * Check the board state for a winner
+     */
+    const winnerPatternX = ["X","X","X"]
+    const winnerPatternO = ["O","O","O"]
+
+
+    function checkWinner(currentArr,winnerComboArr)
+    {
+        // retreive the current board
+        const getWinner = currentArr.some((el) => isEqual(el,winnerComboArr))
+        // console.log(getWinner)
+        return getWinner
+       
+    }
+
+    function isEqual(firstArr,secondArr)
+    {
+        const getRows = firstArr.every((row,i) => {
+            // console.log(`Element in first arr: ${row}`)
+            // console.log(secondArr[i])
+            return row === secondArr[i]
+        })
+        return getRows
     }
     
     function playRound(player,row,col)
     {
         console.log(`Dropping ${getActivePlayer().name}'s token: "${getActivePlayer().token}" into (row,col): ${row}${col}`)
         gameBoard.dropTokenInCell(getActivePlayer().token, row, col);
-        switchPlayerTurns()
+        let winner = checkWinner(printNewRound(),winnerPatternX)
+        
+        if(winner === true)
+        {
+            console.log(`"${getActivePlayer().name}" has won the game. Congrats`)
+        }
+        else
+        {
+            console.log("No Winner. Game Continues")
+            switchPlayerTurns()
+        }
         printNewRound()
     }
     printNewRound()
 
-    return {playRound,getActivePlayer,switchPlayerTurns}
+    return {playRound,getActivePlayer}
 
 }
 
 const game = GameController()
+
+// test 1 Player wins on row0
 game.playRound(game.getActivePlayer().name, 0, 0)
+game.playRound(game.getActivePlayer().name, 1, 0)
+game.playRound(game.getActivePlayer().name, 0, 1)
+game.playRound(game.getActivePlayer().name, 1, 2)
+game.playRound(game.getActivePlayer().name, 0, 2)
+
+
+
+
+
+
+
+
+
 
 
 
