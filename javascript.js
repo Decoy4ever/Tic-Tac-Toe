@@ -49,7 +49,14 @@ function GameBoard()
         return printBoardWithCells
     }
 
-    return {dropTokenInCell,printBoard}
+    function resetBoard()
+    {
+        const resetBoardWithCell0 = board.forEach((row) => row.forEach((cell) => cell.setToken(0)))
+        console.log("Board has been reset")
+        return resetBoardWithCell0
+    }
+
+    return {dropTokenInCell,printBoard, resetBoard}
 }
 
 function Token()
@@ -72,7 +79,7 @@ function GameController()
 {
 
     const gameBoard = GameBoard()
-  
+    let gameOver = false
     const playerOne = "Player"
     const playerTwo = "Comp"
 
@@ -111,11 +118,9 @@ function GameController()
 
     function printNewRound()
     {
-        const currentBoard = gameBoard.printBoard()
+        gameBoard.printBoard()
         console.log(`New game. It is "${getActivePlayer().name}" turn to start`)
-        return currentBoard
     }
-
 
     /**
      * Check the board state for a winner
@@ -152,6 +157,7 @@ function GameController()
         {
             return winnerState = true
         }
+        return winnerState
     }
 
     function playRound(player,row,col)
@@ -163,17 +169,28 @@ function GameController()
         if(winner === true)
         {
             console.log(`Congrats the game has been won by ${getActivePlayer().name}`)
+            console.log("Game is over, please reset the board to start new game")
+            gameOver = true
         }
         else
         {
             console.log("Game Continues")
+            gameOver = false
         }
         switchPlayerTurns()
         printNewRound()
     }
-    printNewRound()
 
-    return {playRound,getActivePlayer}
+    function resetGame()
+    {
+        gameBoard.resetBoard()
+        activePlayer = listOfPlayers[0]
+        gameOver = false
+        console.log("Game has reseted")
+        printNewRound()
+    }
+
+    return {playRound,getActivePlayer,resetGame}
 
 }
 
@@ -193,6 +210,7 @@ game.playRound(game.getActivePlayer().name, 1, 1)
 game.playRound(game.getActivePlayer().name, 1, 2)
 game.playRound(game.getActivePlayer().name, 2, 1)
 game.playRound(game.getActivePlayer().name, 2, 2)
+game.resetGame()
 
 // test 3 Player wins via diags
 // game.playRound(game.getActivePlayer().name, 0, 0)
