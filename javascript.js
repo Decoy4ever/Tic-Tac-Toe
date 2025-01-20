@@ -123,15 +123,13 @@ function GameController()
     function checkWinner(currentBoard)
     {
         let winnerState = false
-        // let winnerMsg = ""
+
         // check the rows
         for(let i =0; i < currentBoard.length; i++)
         {
             if(currentBoard[i][0] === currentBoard[i][1] && currentBoard[i][1] === currentBoard[i][2])
             {
-                winnerState = true
-                // winnerMsg = "Won by Rows"
-                // return currentBoard[i][0]
+                return winnerState = true
             }
         }
 
@@ -140,18 +138,20 @@ function GameController()
         {
             if(currentBoard[0][i] === currentBoard[1][i] && currentBoard[1][i] === currentBoard[2][i])
             {
-                winnerState = true
-                // winnerMsg = "Won by Cols"
+               return winnerState = true
             }
         }
 
         // check by diags
         if(currentBoard[0][0] === currentBoard[1][1] && currentBoard[1][1] === currentBoard[2][2])
         {
-            winnerState = true
+            return winnerState = true
         }
 
-        return winnerState
+        if(currentBoard[0][2] === currentBoard[1][1] && currentBoard[1][1] === currentBoard[2][0])
+        {
+            return winnerState = true
+        }
     }
 
     function playRound(player,row,col)
@@ -160,16 +160,15 @@ function GameController()
         gameBoard.dropTokenInCell(getActivePlayer().token, row, col);
      
         let winner = checkWinner(gameBoard.printBoard())
-        console.log(winner)
         if(winner === true)
         {
-            console.log(`"${getActivePlayer().name}" has won the game. Congrats`)
+            console.log(`Congrats the game has been won by ${getActivePlayer().name}`)
         }
         else
         {
-            switchPlayerTurns()
-            console.log("No Winner. Game Continues")
+            console.log("Game Continues")
         }
+        switchPlayerTurns()
         printNewRound()
     }
     printNewRound()
@@ -187,21 +186,21 @@ const game = GameController()
 // game.playRound(game.getActivePlayer().name, 1, 1)
 // game.playRound(game.getActivePlayer().name, 0, 2)
 
-// test 2 Player wins via cols
-// game.playRound(game.getActivePlayer().name, 0, 1)
-// game.playRound(game.getActivePlayer().name, 0, 0)
-// game.playRound(game.getActivePlayer().name, 1, 1)
-// game.playRound(game.getActivePlayer().name, 1, 2)
-// game.playRound(game.getActivePlayer().name, 2, 1)
-// game.playRound(game.getActivePlayer().name, 2, 2)
-
-// test 3 Player wins via diags
+// test 2 Comp wins via cols
+game.playRound(game.getActivePlayer().name, 0, 1)
 game.playRound(game.getActivePlayer().name, 0, 0)
-game.playRound(game.getActivePlayer().name, 0, 2)
 game.playRound(game.getActivePlayer().name, 1, 1)
 game.playRound(game.getActivePlayer().name, 1, 2)
-game.playRound(game.getActivePlayer().name, 2, 2)
 game.playRound(game.getActivePlayer().name, 2, 1)
+game.playRound(game.getActivePlayer().name, 2, 2)
+
+// test 3 Player wins via diags
+// game.playRound(game.getActivePlayer().name, 0, 0)
+// game.playRound(game.getActivePlayer().name, 0, 2)
+// game.playRound(game.getActivePlayer().name, 1, 1)
+// game.playRound(game.getActivePlayer().name, 1, 2)
+// game.playRound(game.getActivePlayer().name, 2, 2)
+// game.playRound(game.getActivePlayer().name, 2, 1)
 
 
 
