@@ -16,31 +16,31 @@ function GameBoard()
         }
         return boardArr
     }
-
-    const board = createBoard()
+    
+    // Initialize board once
+    const board = createBoard() 
+    
     /**
      * function handle userinput and modify the cell value
      */
     function dropTokenInCell(playerToken, row, col)
     {
-        let value = 0
         // loop through the array and find the cellsValue equal to 0
         // modify the cellvalue from user input
         if(board[row][col].getToken() === 0)
         {
-            value = board[row][col].setToken(playerToken)
-            return value
+            board[row][col].setToken(playerToken)
+            // successful placed token
+            return true
         }
         else if(board[row][col].getToken() !== 0)
         {
             console.log(`Unavaliable choose a different cell from ${row}${col}`)
-            return
+            // cell is occupied
+            return false
         }
     }
 
-    /**
-     * Print the Current Board with cell values
-     */
     function printBoard()
     {
         // print out each cell value in the board
@@ -77,13 +77,12 @@ function Token()
 
 function GameController()
 {
-
     const gameBoard = GameBoard()
-    let gameOver = false
     const playerOne = "Player"
     const playerTwo = "Comp"
-
-
+    
+    
+    let gameOver = false
     let listOfPlayers = 
     [
         {
@@ -101,14 +100,8 @@ function GameController()
 
     function switchPlayerTurns()
     {
-        if(activePlayer === listOfPlayers[0])
-        {
-            return activePlayer = listOfPlayers[1]
-        }
-        else
-        {
-            return activePlayer = listOfPlayers[0]
-        }
+        console.log(`Switched turns. Now it's ${activePlayer.name}'s turn.`);
+        return activePlayer = activePlayer === listOfPlayers[0] ? listOfPlayers[1] : listOfPlayers[0]
     }
 
     function getActivePlayer()
@@ -118,67 +111,49 @@ function GameController()
 
     function printNewRound()
     {
+        console.log(`It's ${getActivePlayer().name}'s turn.`);
         gameBoard.printBoard()
-        console.log(`New game. It is "${getActivePlayer().name}" turn to start`)
     }
 
     /**
      * Check the board state for a winner
      */
-    function checkWinner(currentBoard)
+    function checkWinner(boardState)
     {
-        let winnerState = false
-
         // check the rows
-        for(let i =0; i < currentBoard.length; i++)
+        for(let row = 0; row < boardState.length; row++)
         {
-            if(currentBoard[i][0] === currentBoard[i][1] && currentBoard[i][1] === currentBoard[i][2])
+            if (boardState[row][0] === activePlayer.token && 
+                boardState[row][1] === activePlayer.token &&
+                boardState[row][2] === activePlayer.token)
             {
-                return winnerState = true
+                return true
             }
         }
 
         // check cols
-        for(let i =0; i < currentBoard.length; i++)
-        {
-            if(currentBoard[0][i] === currentBoard[1][i] && currentBoard[1][i] === currentBoard[2][i])
-            {
-               return winnerState = true
+        for (let col = 0; col < 3; col++) {
+            if (boardState[0][col] === activePlayer.token &&
+                boardState[1][col] === activePlayer.token &&
+                boardState[2][col] === activePlayer.token) {
+                return true;
             }
         }
 
         // check by diags
-        if(currentBoard[0][0] === currentBoard[1][1] && currentBoard[1][1] === currentBoard[2][2])
-        {
-            return winnerState = true
+        if (boardState[0][0] === activePlayer.token &&
+            boardState[1][1] === activePlayer.token &&
+            boardState[2][2] === activePlayer.token) {
+            return true;
         }
 
-        if(currentBoard[0][2] === currentBoard[1][1] && currentBoard[1][1] === currentBoard[2][0])
-        {
-            return winnerState = true
+        if (boardState[0][2] === activePlayer.token &&
+            boardState[1][1] === activePlayer.token &&
+            boardState[2][0] === activePlayer.token) {
+            return true;
         }
-        return winnerState
-    }
-
-    function playRound(player,row,col)
-    {
-        console.log(`Dropping ${getActivePlayer().name}'s token: "${getActivePlayer().token}" into (row,col): ${row}${col}`)
-        gameBoard.dropTokenInCell(getActivePlayer().token, row, col);
-     
-        let winner = checkWinner(gameBoard.printBoard())
-        if(winner === true)
-        {
-            console.log(`Congrats the game has been won by ${getActivePlayer().name}`)
-            console.log("Game is over, please reset the board to start new game")
-            gameOver = true
-        }
-        else
-        {
-            console.log("Game Continues")
-            gameOver = false
-        }
-        switchPlayerTurns()
-        printNewRound()
+        // No winner found
+        return false 
     }
 
     function resetGame()
@@ -186,31 +161,66 @@ function GameController()
         gameBoard.resetBoard()
         activePlayer = listOfPlayers[0]
         gameOver = false
-        console.log("Game has reseted")
-        printNewRound()
+        console.log("Game has been reseted")
+        // printNewRound()
+    }
+
+    function playRound(player,row,col)
+    {
+        if (gameOver) {
+            console.log("The game is over! Please reset the board to start a new game.");
+            return;
+        }
+
+        player = getActivePlayer()
+        console.log(`Dropping ${player.name}'s token: "${player.token}" into (row,col): ${row}${col}`)
+        let successCellDrop = gameBoard.dropTokenInCell(player.token, row, col);
+        if(!successCellDrop)
+        {
+            console.log("Invalid moves. Cell already occupied Try again!")
+            // Don't switch turns if move is invalid
+            return
+        }
+
+         // Get the updated board state and display it
+        const boardState = gameBoard.printBoard();
+
+        if(checkWinner(boardState))
+        {
+            console.log(`Congrats the game has been won by ${player.name}`)
+            gameOver = true
+        }
+        else
+        {
+            switchPlayerTurns()
+            printNewRound()
+        }
     }
 
     return {playRound,getActivePlayer,resetGame}
-
 }
 
 const game = GameController()
 
 // test 1 Player wins on rows
-// game.playRound(game.getActivePlayer().name, 0, 0)
-// game.playRound(game.getActivePlayer().name, 1, 0)
-// game.playRound(game.getActivePlayer().name, 0, 1)
-// game.playRound(game.getActivePlayer().name, 1, 1)
-// game.playRound(game.getActivePlayer().name, 0, 2)
+game.playRound(game.getActivePlayer().name, 0, 0)
+game.playRound(game.getActivePlayer().name, 1, 0)
+game.playRound(game.getActivePlayer().name, 0, 1)
+game.playRound(game.getActivePlayer().name, 1, 1)
+game.playRound(game.getActivePlayer().name, 0, 2)
+game.resetGame()
+game.playRound(game.getActivePlayer().name, 2, 1)
+game.playRound(game.getActivePlayer().name, 1, 1)
+
 
 // test 2 Comp wins via cols
-game.playRound(game.getActivePlayer().name, 0, 1)
-game.playRound(game.getActivePlayer().name, 0, 0)
-game.playRound(game.getActivePlayer().name, 1, 1)
-game.playRound(game.getActivePlayer().name, 1, 2)
-game.playRound(game.getActivePlayer().name, 2, 1)
-game.playRound(game.getActivePlayer().name, 2, 2)
-game.resetGame()
+// game.playRound(game.getActivePlayer().name, 0, 1)
+// game.playRound(game.getActivePlayer().name, 0, 0)
+// game.playRound(game.getActivePlayer().name, 1, 1)
+// game.playRound(game.getActivePlayer().name, 1, 2)
+// game.playRound(game.getActivePlayer().name, 2, 1)
+// game.playRound(game.getActivePlayer().name, 2, 2)
+// game.resetGame()
 
 // test 3 Player wins via diags
 // game.playRound(game.getActivePlayer().name, 0, 0)
@@ -219,6 +229,11 @@ game.resetGame()
 // game.playRound(game.getActivePlayer().name, 1, 2)
 // game.playRound(game.getActivePlayer().name, 2, 2)
 // game.playRound(game.getActivePlayer().name, 2, 1)
+
+// test 4 player selects same cell
+// game.playRound(game.getActivePlayer().name, 0, 1)
+// game.playRound(game.getActivePlayer().name, 0, 1)
+
 
 
 
