@@ -16,17 +16,23 @@ function GameBoard()
         }
         return boardArr
     }
+
     
     // Initialize board once
     const board = createBoard() 
     
+    function getBoard()
+    {
+        return board
+    }
+
     /**
      * function handle userinput and modify the cell value
      */
     function dropTokenInCell(playerToken, row, col)
     {
         // loop through the array and find the cellsValue equal to 0
-        // modify the cellvalue from user input
+        // modify the cellvalue to user input
         if(board[row][col].getToken() === 0)
         {
             board[row][col].setToken(playerToken)
@@ -56,7 +62,7 @@ function GameBoard()
         return resetBoardWithCell0
     }
 
-    return {dropTokenInCell,printBoard, resetBoard}
+    return {getBoard, dropTokenInCell,printBoard, resetBoard}
 }
 
 function Token()
@@ -95,7 +101,6 @@ function GameController()
         }
     ]
 
-    // init let active player be the first element in the listOfPlayers arr
     let activePlayer = listOfPlayers[0]
 
     function switchPlayerTurns()
@@ -197,42 +202,59 @@ function GameController()
         }
     }
 
-    return {playRound,getActivePlayer,resetGame}
+    return {getBoard: gameBoard.getBoard, playRound,getActivePlayer,resetGame}
 }
 
-const game = GameController()
+/**
+ * Handle the display/DOM logics
+ */
+function ScreenController()
+{
+    const game = GameController()
+    const boardDiv = document.querySelector('.board')
+    const scoreBoardDiv = document.querySelector('.scoreboard')
+    const turnDiv = document.querySelector('.turn')
+    // retreive the latest version of the board
+    const currentBoard = game.getBoard()
+    const activePlayer= game.getActivePlayer()
+    
+    // retrieve the classess for interaction for the board
+    // use a loop to create the grid and create buttons
+    function updateScreen()
+    {
+        boardDiv.textContent = ""
+        // display player turn
+        turnDiv.textContent = `${activePlayer.name}'s turn`
 
-// test 1 Player wins on rows
-game.playRound(game.getActivePlayer().name, 0, 0)
-game.playRound(game.getActivePlayer().name, 1, 0)
-game.playRound(game.getActivePlayer().name, 0, 1)
-game.playRound(game.getActivePlayer().name, 1, 1)
-game.playRound(game.getActivePlayer().name, 0, 2)
-game.resetGame()
-game.playRound(game.getActivePlayer().name, 2, 1)
-game.playRound(game.getActivePlayer().name, 1, 1)
+        // render board square
+        currentBoard.forEach((rowEl,rowIndex) => {
+            rowEl.forEach((colEl,colIndex) => {
+                const btnCell = document.createElement('button')
+                btnCell.classList.add("cell")
+                btnCell.dataset.row = rowIndex; // Assign row
+                btnCell.dataset.column = colIndex; // Assign column
+                btnCell.textContent = colEl.getToken()
+                boardDiv.appendChild(btnCell)
+            })
+        })
+    }
+
+    function clickHandler(e)
+    {
+        const selectedCol = e.target.dataset.column
+        const selectedRow = e.target.dataset.row 
+        game.playRound(`${activePlayer.name}`,selectedRow, selectedCol)
+        updateScreen()
+    }
+
+    boardDiv.addEventListener("click", clickHandler)
+    updateScreen()
+
+}
+const screenGame = ScreenController()
 
 
-// test 2 Comp wins via cols
-// game.playRound(game.getActivePlayer().name, 0, 1)
-// game.playRound(game.getActivePlayer().name, 0, 0)
-// game.playRound(game.getActivePlayer().name, 1, 1)
-// game.playRound(game.getActivePlayer().name, 1, 2)
-// game.playRound(game.getActivePlayer().name, 2, 1)
-// game.playRound(game.getActivePlayer().name, 2, 2)
-// game.resetGame()
 
-// test 3 Player wins via diags
-// game.playRound(game.getActivePlayer().name, 0, 0)
-// game.playRound(game.getActivePlayer().name, 0, 2)
-// game.playRound(game.getActivePlayer().name, 1, 1)
-// game.playRound(game.getActivePlayer().name, 1, 2)
-// game.playRound(game.getActivePlayer().name, 2, 2)
-// game.playRound(game.getActivePlayer().name, 2, 1)
-
-// test 4 player selects same cell
-// game.playRound(game.getActivePlayer().name, 0, 1)
-// game.playRound(game.getActivePlayer().name, 0, 1)
 
 
 
