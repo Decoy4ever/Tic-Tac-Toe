@@ -140,7 +140,8 @@ function GameController()
         for (let col = 0; col < 3; col++) {
             if (boardState[0][col] === activePlayer.token &&
                 boardState[1][col] === activePlayer.token &&
-                boardState[2][col] === activePlayer.token) {
+                boardState[2][col] === activePlayer.token) 
+            {
                 return true;
             }
         }
@@ -198,8 +199,6 @@ function GameController()
          // Get the updated board state and display it
         const boardState = gameBoard.printBoard();
 
-      
-
         if(checkWinner(boardState))
         {
             console.log(`Congrats the game has been won by ${player.name}`)
@@ -219,7 +218,7 @@ function GameController()
         }
     }
 
-    return {getBoard: gameBoard.getBoard, playRound,getActivePlayer,resetGame}
+    return {getBoard: gameBoard.getBoard, playRound, getActivePlayer,resetGame}
 }
 
 /**
@@ -227,19 +226,21 @@ function GameController()
  */
 function ScreenController()
 {
+    // retrieve the classess for interaction for the board
     const game = GameController()
     const boardDiv = document.querySelector('.board')
     const scoreBoardDiv = document.querySelector('.scoreboard')
     const turnDiv = document.querySelector('.turn')
-    // retreive the latest version of the board
-    const currentBoard = game.getBoard()
-    const activePlayer= game.getActivePlayer()
     
-    // retrieve the classess for interaction for the board
     // use a loop to create the grid and create buttons
     function updateScreen()
     {
+        // retreive the latest version of the board
+        const currentBoard = game.getBoard()
+        let activePlayer = game.getActivePlayer()
+        
         boardDiv.textContent = ""
+
         // display player turn
         turnDiv.textContent = `${activePlayer.name}'s turn`
 
@@ -260,7 +261,7 @@ function ScreenController()
     {
         const selectedCol = e.target.dataset.column
         const selectedRow = e.target.dataset.row 
-        game.playRound(`${activePlayer.name}`,selectedRow, selectedCol)
+        game.playRound(game.getActivePlayer().name,selectedRow, selectedCol)
         updateScreen()
     }
 
