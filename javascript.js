@@ -218,7 +218,7 @@ function GameController()
         }
     }
 
-    return {getBoard: gameBoard.getBoard, playRound, getActivePlayer, resetGame}
+    return {getBoard: gameBoard.getBoard, playRound, getActivePlayer, resetGame, checkWinner, checkBoardisFull}
 }
 
 /**
@@ -240,11 +240,33 @@ function ScreenController()
         // retreive the latest version of the board
         const currentBoard = game.getBoard()
         let activePlayer = game.getActivePlayer()
-        
+
+        const boardState = currentBoard.map(row => row.map(cell => cell.getToken()));
+
+        // clear previous msg
+        if(winnerDiv)
+        {
+            // clear previous msg
+            winnerDiv.textContent = ""
+        }
+
         boardDiv.textContent = ""
+
+        if(game.checkWinner(boardState))
+        {
+            // display player turn
+            winnerDiv.textContent = `${activePlayer.name} Wins the Game`
+        }
+        else if(game.checkBoardisFull(boardState))
+        {
+            winnerDiv.textContent = `Game is a Tie`
+        }
+        else
+        {
+            turnDiv.textContent = `${activePlayer.name}'s turn`
+        }
+        
       
-        // display player turn
-        turnDiv.textContent = `${activePlayer.name}'s turn`
 
         // render board square
         currentBoard.forEach((rowEl,rowIndex) => {
