@@ -62,7 +62,7 @@ function GameBoard()
         return resetBoardWithCell0
     }
 
-    return {getBoard, dropTokenInCell,printBoard, resetBoard}
+    return {getBoard, dropTokenInCell, printBoard, resetBoard}
 }
 
 function Token()
@@ -145,7 +145,7 @@ function GameController()
             }
         }
 
-        // check by diags
+        // check by diags and anti-diag
         if (boardState[0][0] === activePlayer.token &&
             boardState[1][1] === activePlayer.token &&
             boardState[2][2] === activePlayer.token) {
@@ -159,6 +159,13 @@ function GameController()
         }
         // No winner found
         return false 
+    }
+
+    // check if each element has token in their cell
+    function checkBoardisFull(board)
+    {
+        const boardIsFull = board.every((cell) => cell.every((el) => el !== 0))
+        return boardIsFull
     }
 
     function resetGame()
@@ -187,13 +194,23 @@ function GameController()
             return
         }
 
+
          // Get the updated board state and display it
         const boardState = gameBoard.printBoard();
+
+      
 
         if(checkWinner(boardState))
         {
             console.log(`Congrats the game has been won by ${player.name}`)
             gameOver = true
+            return
+        }
+        else if(checkBoardisFull(boardState))
+        {
+            console.log('The board is full. All cells are occupied. Game is Tied')
+            gameOver = true;
+            return
         }
         else
         {
