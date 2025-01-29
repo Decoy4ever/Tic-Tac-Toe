@@ -218,7 +218,7 @@ function GameController()
         }
     }
 
-    return {getBoard: gameBoard.getBoard, playRound, getActivePlayer,resetGame}
+    return {getBoard: gameBoard.getBoard, playRound, getActivePlayer, resetGame}
 }
 
 /**
@@ -229,8 +229,10 @@ function ScreenController()
     // retrieve the classess for interaction for the board
     const game = GameController()
     const boardDiv = document.querySelector('.board')
-    const scoreBoardDiv = document.querySelector('.scoreboard')
+    const winnerDiv = document.querySelector('.winner')
     const turnDiv = document.querySelector('.turn')
+    const resetBtn = document.querySelector('.reset')
+
     
     // use a loop to create the grid and create buttons
     function updateScreen()
@@ -240,7 +242,7 @@ function ScreenController()
         let activePlayer = game.getActivePlayer()
         
         boardDiv.textContent = ""
-
+      
         // display player turn
         turnDiv.textContent = `${activePlayer.name}'s turn`
 
@@ -257,15 +259,24 @@ function ScreenController()
         })
     }
 
+
+    function resetHandler()
+    {
+        game.resetGame()
+        updateScreen()
+    }
+
     function clickHandler(e)
     {
         const selectedCol = e.target.dataset.column
         const selectedRow = e.target.dataset.row 
         game.playRound(game.getActivePlayer().name,selectedRow, selectedCol)
+        // game.resetGame()
         updateScreen()
     }
 
     boardDiv.addEventListener("click", clickHandler)
+    resetBtn.addEventListener("click", resetHandler)
     updateScreen()
 
 }
