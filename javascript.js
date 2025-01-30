@@ -259,7 +259,7 @@ function ScreenController()
         }
         else if(game.checkBoardisFull(boardState))
         {
-            winnerDiv.textContent = `Game is a Tie`
+            winnerDiv.textContent = `Game is a Tie. Reset if you want to play again`
         }
         else
         {
@@ -273,9 +273,14 @@ function ScreenController()
             rowEl.forEach((colEl,colIndex) => {
                 const btnCell = document.createElement('button')
                 btnCell.classList.add("cell")
-                btnCell.dataset.row = rowIndex; // Assign row
-                btnCell.dataset.column = colIndex; // Assign column
-                btnCell.textContent = colEl.getToken()
+                btnCell.dataset.row = rowIndex; 
+                btnCell.dataset.column = colIndex;
+                
+                // display only player token, leave empty cells blank
+                btnCell.textContent = colEl.getToken() === 0 ? "" : colEl.getToken()
+
+                // btnCell.style.backgroundColor = "white"
+            
                 boardDiv.appendChild(btnCell)
             })
         })

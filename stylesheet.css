@@ -3,45 +3,55 @@
 
 * {
     font-family: 'ABeeZee', sans-serif;
-    width: 100%;
     font-size: 1rem;
     text-align: center;
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 h1{
-    padding: 0;
-    margin: 0;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     font-size: 2rem;
 }
 
 .container {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    /* padding-top: 1rem; */
+    /* padding-bottom: 1rem; */
     margin: 0;
     display: grid;
+    grid-template-rows: repeat(2, minmax(min-content, 1fr)) 2fr 1fr min-content;
     justify-content: center;
 }
 
+.winner, .turn{
+    align-content: center;
+
+}
+
 .board{
-    padding: 0.8rem;
-    border: 0.1rem black solid;
+    /* padding-top: 0.5rem; */
+    /* padding-bottom: 0.5rem; */
+    grid-row: 3 / 4;
     display: grid;
-    gap: 0.5rem;
-    grid-template-rows: repeat(3,1fr);
     grid-template-columns: repeat(3,1fr);
-    /* gap: 0.2rem; */
-    /* justify-content: center; */
+    grid-template-rows: repeat(3,1fr) ;
+    /* gap: 0.1rem; */
     /* background-color: black; */
 }
 
-.board > .cell {
-    border-radius: 0;
-    /* width: 2rem; */
-    /* display: grid; */
-    /* justify-content: center; */
+.container > .cell{
+    background-color: white;
 }
 
 button{
-    /* border: none; */
+    border: 1px solid black;
     background-color: white;
 }
+
+.reset{
+    border-radius: 0.2rem;
+}
+
