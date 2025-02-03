@@ -87,7 +87,6 @@ function GameController()
     const playerOne = "Player"
     const playerTwo = "Comp"
     
-    
     let gameOver = false
     let listOfPlayers = 
     [
@@ -195,7 +194,6 @@ function GameController()
             return
         }
 
-
          // Get the updated board state and display it
         const boardState = gameBoard.printBoard();
 
@@ -232,21 +230,18 @@ function ScreenController()
     const winnerDiv = document.querySelector('.winner')
     const turnDiv = document.querySelector('.turn')
     const resetBtn = document.querySelector('.reset')
-
-    
+ 
     // use a loop to create the grid and create buttons
     function updateScreen()
     {
         // retreive the latest version of the board
         const currentBoard = game.getBoard()
         let activePlayer = game.getActivePlayer()
-
         const boardState = currentBoard.map(row => row.map(cell => cell.getToken()));
 
         // clear previous msg
         if(winnerDiv)
         {
-            // clear previous msg
             winnerDiv.textContent = ""
         }
 
@@ -254,7 +249,7 @@ function ScreenController()
 
         if(game.checkWinner(boardState))
         {
-            // display player turn
+            // display active winner msg
             winnerDiv.textContent = `${activePlayer.name} Wins the Game`
         }
         else if(game.checkBoardisFull(boardState))
@@ -266,8 +261,6 @@ function ScreenController()
             turnDiv.textContent = `${activePlayer.name}'s turn`
         }
         
-      
-
         // render board square
         currentBoard.forEach((rowEl,rowIndex) => {
             rowEl.forEach((colEl,colIndex) => {
@@ -277,15 +270,11 @@ function ScreenController()
                 btnCell.dataset.column = colIndex;
                 
                 // display only player token, leave empty cells blank
-                btnCell.textContent = colEl.getToken() === 0 ? "" : colEl.getToken()
-
-                // btnCell.style.backgroundColor = "white"
-            
+                btnCell.textContent = colEl.getToken() === 0 ? "" : colEl.getToken()            
                 boardDiv.appendChild(btnCell)
             })
         })
     }
-
 
     function resetHandler()
     {
@@ -298,7 +287,6 @@ function ScreenController()
         const selectedCol = e.target.dataset.column
         const selectedRow = e.target.dataset.row 
         game.playRound(game.getActivePlayer().name,selectedRow, selectedCol)
-        // game.resetGame()
         updateScreen()
     }
 
