@@ -11,19 +11,60 @@
     padding: 0;
 }
 
-h1{
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    font-size: 2rem;
-}
 
 .container {
     /* padding-top: 1rem; */
     /* padding-bottom: 1rem; */
     margin: 0;
     display: grid;
-    grid-template-rows: repeat(2, minmax(min-content, 1fr)) 2fr 1fr min-content;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
+    /* gap: 1rem; */
+}
+
+h1{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-size: 2rem;
+    grid-column: 2/3;
+    grid-row: 1/2;
+}
+
+.turn{ 
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+}
+
+.board{
+    grid-column: 2 / 3;
+    grid-row: 3 / 6;
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3,1fr) ;
+}
+
+.winner{
+    grid-column: 2 / 3;
+    grid-row: 6 / 7
+}
+
+
+.scoreboard{ 
+    
+}
+
+.reset{
+    border-radius: 0.2rem;
+    grid-column: 2/3;
+    grid-row: 7/8;
+}
+
+.scoreboard {
+    grid-column: 3 / 4;
+    grid-row: 3 / 5;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
 }
 
 .winner, .turn{
@@ -31,16 +72,16 @@ h1{
 
 }
 
-.board{
-    /* padding-top: 0.5rem; */
-    /* padding-bottom: 0.5rem; */
-    grid-row: 3 / 4;
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    grid-template-rows: repeat(3,1fr) ;
-    /* gap: 0.1rem; */
-    /* background-color: black; */
+.score{
+    width: 20%;
+    height: 20%;
 }
+
+
+
+
+
+
 
 .container > .cell{
     background-color: white;
@@ -51,7 +92,4 @@ button{
     background-color: white;
 }
 
-.reset{
-    border-radius: 0.2rem;
-}
 
